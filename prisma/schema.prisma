@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  username String  @unique
+  password String
+  role     String // ADMIN or CASHIER
+  orders   Order[]
+}
+
+model Product {
+  id        String           @id @default(uuid())
+  name      String
+  category  String
+  basePrice Float
+  variants  ProductVariant[]
+  createdAt DateTime         @default(now())
+}
+
+model ProductVariant {
+  id         String      @id @default(uuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id])
+  sku        String      @unique // Barcode/SKU code (e.g., TSHIRT-BLK-L)
+  size       String // S, M, L, XL
+  color      String // Black, White, etc.
+  stock      Int         @default(0)
+  price      Float? // Optional variant-specific price
+  orderItems OrderItem[]
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  totalAmount Float
+  paymentType String // CASH, CARD
+  cashierId   String
+  cashier     User        @relation(fields: [cashierId], references: [id])
+  items       OrderItem[]
+  createdAt   DateTime    @default(now())
+}
+
+model OrderItem {
+  id               String         @id @default(uuid())
+  orderId          String
+  order            Order          @relation(fields: [orderId], references: [id])
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  quantity         Int
+  priceAtTime      Float
+}
