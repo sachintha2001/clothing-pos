@@ -1,1 +1,208 @@
-@import "tailwindcss";
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/space-grotesk';
+@import 'tailwindcss';
+
+/* ──────────────────────────────────────────────────────────────
+   Design tokens
+   ────────────────────────────────────────────────────────────── */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  --color-ink-950: #06060b;
+  --color-ink-900: #0b0b14;
+  --color-ink-850: #10101b;
+  --color-ink-800: #161624;
+  --color-ink-700: #1f1f31;
+  --color-ink-600: #2b2b42;
+
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #7c3aed;
+
+  --color-blush-400: #f472b6;
+  --color-blush-500: #ec4899;
+
+  --color-mint-400: #34d399;
+  --color-mint-500: #10b981;
+
+  --color-sun-400: #fbbf24;
+  --color-coral-400: #fb7185;
+  --color-coral-500: #f43f5e;
+
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-scale-in: scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-in-right: slide-in-right 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 14s ease-in-out infinite;
+  --animate-float-slow: float 22s ease-in-out infinite reverse;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-shimmer: shimmer 2.4s linear infinite;
+  --animate-check: check 0.6s cubic-bezier(0.65, 0, 0.45, 1) 0.15s both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.94) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.08); }
+    66% { transform: translate(-30px, 25px) scale(0.95); }
+  }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  @keyframes check {
+    from { stroke-dashoffset: 48; }
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, var(--color-brand-500) 0%, var(--color-blush-500) 100%);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Base
+   ────────────────────────────────────────────────────────────── */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-ink-950 font-sans text-slate-200 antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+    user-select: none;
+  }
+
+  input,
+  textarea,
+  select {
+    user-select: text;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand-500) 45%, transparent);
+  }
+
+  /* Slim scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.08);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  /* Hide number spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Receipt printing — always white paper, black ink */
+  @media print {
+    html,
+    body {
+      background: white !important;
+      color: black;
+    }
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Reusable components
+   ────────────────────────────────────────────────────────────── */
+@layer components {
+  .glass {
+    @apply border border-white/[0.07] bg-white/[0.035] backdrop-blur-xl;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.04),
+      0 20px 50px -20px rgb(0 0 0 / 0.6);
+  }
+
+  .glass-strong {
+    @apply border border-white/10 bg-ink-850/80 backdrop-blur-2xl;
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+      0 30px 80px -20px rgb(0 0 0 / 0.8);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-300 via-blush-400 to-sun-400 bg-clip-text text-transparent;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold whitespace-nowrap transition-all duration-200 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/60 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply bg-brand-gradient text-white shadow-lg shadow-brand-600/25 hover:shadow-xl hover:shadow-blush-500/30 hover:brightness-110;
+  }
+  .btn-success {
+    @apply bg-gradient-to-br from-mint-400 to-emerald-600 text-ink-950 shadow-lg shadow-mint-500/25 hover:shadow-xl hover:shadow-mint-500/35 hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply border border-white/[0.08] bg-white/[0.04] text-slate-200 hover:border-white/15 hover:bg-white/[0.08];
+  }
+  .btn-danger {
+    @apply bg-coral-500/90 text-white shadow-lg shadow-coral-500/25 hover:bg-coral-500;
+  }
+  /* use together with .btn .btn-ghost */
+  .btn-icon {
+    @apply h-10 w-10 p-0;
+  }
+
+  /* Form controls */
+  .label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-slate-400 uppercase;
+  }
+  .input {
+    @apply w-full rounded-xl border border-white/[0.08] bg-ink-900/70 px-3.5 py-2.5 text-sm text-slate-100 transition outline-none placeholder:text-slate-500 hover:border-white/15 focus:border-brand-400/70 focus:bg-ink-900 focus:ring-4 focus:ring-brand-500/15;
+  }
+
+  /* Chips & badges */
+  .chip {
+    @apply inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 text-xs font-medium whitespace-nowrap text-slate-400 transition hover:border-white/15 hover:text-slate-200;
+  }
+  .chip-active {
+    @apply border-transparent bg-brand-gradient text-white shadow-md shadow-brand-600/30 hover:text-white;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-semibold tracking-wide;
+  }
+
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-white/10 bg-white/5 px-1.5 font-sans text-[10px] font-semibold text-slate-400;
+  }
+}
